@@ -1,7 +1,8 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore } = require('@whiskeysockets/baileys');
 const P = require('pino');
 const fs = require('fs');
-const chalk = require('chalk').default; // **Fixed import for Chalk 5.x**
+const chalk = require('chalk').default;
+const Boom = require('@hapi/boom'); // ✅ Boom import added
 
 const store = makeInMemoryStore({ logger: P().child({ level: 'silent', stream: 'store' }) });
 
@@ -16,10 +17,9 @@ async function startBot() {
     });
 
     store.bind(sock.ev);
-
     sock.ev.on('creds.update', saveCreds);
 
-    console.log(chalk.green('\n[!] ERROR_EXTERMINATOR Activated!\n')); // This should work now
+    console.log(chalk.green('\n[!] ERROR_EXTERMINATOR Activated!\n'));
 
     const menuText = `╔═════《 ERROR_EXTERMINATOR 》════╗
 ║  
