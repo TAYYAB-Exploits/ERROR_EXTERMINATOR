@@ -1,0 +1,16 @@
+{
+  "name": "whatsapp-bot",
+  "version": "1.0.0",
+  "description": "ERROR_EXTERMINATOR WhatsApp Bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "author": "TayyabExploits",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.17.1",
+    "chalk": "^5.3.0",
+    "pino": "^8.15.0"
+  }
+}
