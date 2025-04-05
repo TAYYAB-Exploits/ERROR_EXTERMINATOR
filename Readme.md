@@ -26,6 +26,8 @@ git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR
 
 cd ERROR_EXTERMINATOR 
  
+npm install @hapi/boom
+
 npm install --no-bin-links 
 
 npm start
