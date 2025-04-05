@@ -14,20 +14,24 @@ A WhatsApp bot powered by [Baileys](https://github.com/WhiskeySockets/Baileys). 
 
 ```
 # Termux Update & Basic Packages
-pkg update -y && pkg upgrade -y
+pkg update -y
+
+pkg upgrade -y
 
 pkg install nodejs -y
 
 pkg install git -y
 
-pkg install nodejs git libwebp ffmpeg imagemagick -y 
+git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR
 
-git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR 
+cd ERROR_EXTERMINATOR
 
-cd ERROR_EXTERMINATOR 
- 
+npm install
+
 npm install @hapi/boom
 
-npm install --no-bin-links 
+npm install chalk
+
+npm install pino
 
 npm start
