@@ -20,7 +20,7 @@ pkg install nodejs -y
 pkg install git -y
 
 # Clone the Bot Repo
-git clone https://github.com/YourUsername/ERROR_EXTERMINATOR.git
+git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR
 cd ERROR_EXTERMINATOR
 
 # Install Required Node.js Packages
