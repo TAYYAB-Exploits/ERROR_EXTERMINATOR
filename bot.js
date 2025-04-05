@@ -121,7 +121,7 @@ async function startBot() {
         const { connection, lastDisconnect, qr } = update;
 
         if (connection === 'close') {
-            const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
+            const reason = Boom.boomify(lastDisconnect?.error)?.output?.statusCode;
             console.log(chalk.red(`Connection closed. Reason: ${reason}`));
         }
 
