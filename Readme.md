@@ -10,21 +10,22 @@ A WhatsApp bot powered by [Baileys](https://github.com/WhiskeySockets/Baileys). 
 ## Developer Credits
 - Main Developer: [@Tayyabexploits](https://www.youtube.com/@Tayyabexploits)
 - Team: MS Hacker, AR (Mjolnir)
-
 ## Installation
 
 ```
 # Termux Update & Basic Packages
 pkg update -y && pkg upgrade -y
+
 pkg install nodejs -y
+
 pkg install git -y
 
-# Clone the Bot Repo
-git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR
-cd ERROR_EXTERMINATOR
+pkg install nodejs git libwebp ffmpeg imagemagick -y 
 
-# Install Required Node.js Packages
-npm install
+git clone https://github.com/TAYYAB-Exploits/ERROR_EXTERMINATOR 
 
-# Start the Bot
+cd ERROR_EXTERMINATOR 
+ 
+npm install --no-bin-links 
+
 npm start
