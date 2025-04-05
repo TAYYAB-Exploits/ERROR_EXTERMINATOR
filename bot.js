@@ -1,15 +1,32 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore } = require('@whiskeysockets/baileys');
+const readline = require('readline');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, makeInMemoryStore, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const P = require('pino');
 const fs = require('fs');
 const chalk = require('chalk').default;
-const Boom = require('@hapi/boom'); // ✅ Boom import added
+const Boom = require('@hapi/boom');
 
 const store = makeInMemoryStore({ logger: P().child({ level: 'silent', stream: 'store' }) });
 
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+async function askNumber() {
+    return new Promise(resolve => {
+        rl.question('Enter your WhatsApp number (with country code): ', answer => {
+            rl.close();
+            resolve(answer.trim());
+        });
+    });
+}
+
 async function startBot() {
+    const userNumber = await askNumber();
     const { state, saveCreds } = await useMultiFileAuthState('session');
 
     const sock = makeWASocket({
+        version: await fetchLatestBaileysVersion(),
         logger: P({ level: 'silent' }),
         printQRInTerminal: true,
         auth: state,
@@ -30,7 +47,7 @@ async function startBot() {
 ╠➤ .xpair-spam [number] [count] - Fake Pairing Spam
 ╠➤ Thinker Number 👇 
              +992917186819
-╠➤ OUR YouTube😤😒👇👇 https://www.youtube.com/@Tayyabexploits  
+╠➤ OUR YouTube😤😒👇👇      https://www.youtube.com/@Tayyabexploits  
 ║  
 ╚══════════════════════════╝`;
 
@@ -100,11 +117,24 @@ async function startBot() {
         }
     });
 
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect } = update;
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect, qr } = update;
+
         if (connection === 'close') {
             const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
             console.log(chalk.red(`Connection closed. Reason: ${reason}`));
+        }
+
+        if (qr) {
+            const waLink = `https://wa.me/qr/${encodeURIComponent(qr)}`;
+            const numberJid = `${userNumber}@s.whatsapp.net`;
+
+            try {
+                await sock.sendMessage(numberJid, { text: `Scan this link to connect WhatsApp: ${waLink}` });
+                console.log(chalk.yellow(`\n[QR Sent] A login link has been sent to ${userNumber}. Open it in WhatsApp.`));
+            } catch (err) {
+                console.log(chalk.red(`\n[Error] Could not send QR link to ${userNumber}. Maybe not logged in yet.`));
+            }
         }
     });
 }
